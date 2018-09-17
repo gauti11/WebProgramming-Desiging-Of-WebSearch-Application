@@ -1,0 +1,20 @@
+{
+  "name": "i580w",
+  "version": "1.0.0",
+  "description": "Web Programming",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/gberi1/i580w.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/gberi1/i580w/issues"
+  },
+  "homepage": "https://gitlab.com/gberi1/i580w#readme"
+}
