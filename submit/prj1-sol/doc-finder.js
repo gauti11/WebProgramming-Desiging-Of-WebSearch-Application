@@ -267,7 +267,7 @@ class Result {
 function compareResults(result1, result2) {
   return (result2.score - result1.score) ||
     result1.name.localeCompare(result2.name);
-	console.log("Comparing results");
+	//console.log("Comparing results");
 }
 
 /** Normalize word by stem'ing it, removing all non-alphabetic
