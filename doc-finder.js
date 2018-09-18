@@ -12,6 +12,7 @@ class DocFinder {
 	this.dataSet = new Map();
 	this.storeContent = new Map();
 	this.fileIndexes = new Map();
+	this.storeOffsetMatch = new Map();
       //this._wordsLow = new Map();
 	 //console.log("CONSTRUCTOR CALLING");
   }
@@ -40,6 +41,7 @@ is_noise_word(word){
 }
  _wordsLow(content){
 	let match;
+	//console.log("hello");
 	var storeMatch = [];
 	//console.log(content);
 	while (match = WORD_REGEX.exec(content)) {
@@ -50,6 +52,7 @@ is_noise_word(word){
         //console.log("this is from array in noise words", storeMatch);
         
 	//console.log(storeMatch);
+	//this.storeOffsetMatch = storeMatch;
  return storeMatch;
     }
     
@@ -83,30 +86,39 @@ addContent(name, content) {
 	//console.log(name);
 	//var count = 1;	
 
+	var lineWithNumber = new Map();
+	this.storeOffsetMatch.set(name, lineWithNumber);
+	//console.log("jsdgfdgfkdfh: ", this.storeOffsetMatch);
 
-
-var contentList = content.split("\n");
-      for(var j=0;j<contentList.length;j++)
-      {
-	var editContent = this.words(contentList[j]);
-	for(var i=0;i<editContent.length;i++)
+	var contentList = content.split("\n");
+	let counter = 0;
+      	for(var j=0;j<contentList.length;j++)
+      	{
+	//console.log("name: "+name);
+		lineWithNumber.set(contentList[j], counter);
+		counter++;
+		var editContent = this.words(contentList[j]);
+//console.log(this.storeOffsetMatch);
+		for(var i=0;i<editContent.length;i++)
 	      	{
 			//console.log(editContent[i]);
 			var count = 1;	
 			if(this.indexes.has(name +" "+editContent[i]))
-				{		
-					count = this.indexes.get(name +" "+editContent[i]);
-					this.indexes.set(name + " " +editContent[i], count+1);
-					//console.log(this.indexes.set(name + " " +editContent[i], count+1));
-				}
+			{		
+				count = this.indexes.get(name +" "+editContent[i]);
+				this.indexes.set(name + " " +editContent[i], count+1);
+				//console.log(this.indexes.set(name + " " +editContent[i], count+1));
+			}
 			else{
+				this.fileIndexes.set(name,name);
 				this.indexes.set(name +" " +editContent[i], count);
 				this.storeContent.set(name +" " +editContent[i] , contentList[j]);
-				}
+			}
 	}
-} 	
+//console.log(this.fileIndexes);
+	} 	
 //console.log(this.indexes);
-//console.log(this.storeContent);
+//console.log("After sujfgdgkudvhflvfl: ",this.storeOffsetMatch);
   }
     
   /** Given a list of normalized, non-noise words search terms, 
@@ -127,7 +139,7 @@ var contentList = content.split("\n");
   find(terms) {
     //@TODO
 	 //console.log(terms);
-	var termCount = terms.length;
+	/**var termCount = terms.length;
 	//console.log(terms.length);
 	//var hello = this.storeContent;
 	//console.log(hello);
@@ -147,7 +159,74 @@ var contentList = content.split("\n");
 		//console.log("var x: ",x);
 		//if(count != termCount
 			
+	}*/
+
+	
+	var termCount = terms.length;
+	//console.log(terms.length);
+	//var hello = this.storeContent;
+	//console.log(hello);
+	var storeContentKeys = this.fileIndexes.keys();
+	//console.log(storeContentKeys);
+	let count = 0;
+	for(let storeKey of storeContentKeys){
+		//console.log(termCount);
+		let x = ''+storeKey;
+		//var x = keyItem.split(' ')[0];
+		if(termCount === 1) {
+			var new_x = x+' '+terms[0];
+			//console.log("key_x: "+new_x);
+			if(this.storeContent.has(new_x)) {
+				console.log(x+" : "+this.storeContent.get(new_x));
+				console.log(this.indexes.get(new_x));
+			}
+		} else {
+			//console.log(this.storeOffsetMatch);
+			let minOff = 9999,minOff2 = 9999, minLine = '';
+			let termFoundCount = 0, j = 0;
+			let testMap = new Map();
+			for(let termFound of terms) {
+				var new_x = x+' '+termFound;
+				if(this.indexes.get(new_x)) {
+				//console.log(parseInt(this.indexes.get(new_x)),":",new_x);
+				if(parseInt(this.indexes.get(new_x)) !== NaN) {
+					//console.log("before j: "+parseInt(this.indexes.get(new_x)));
+					
+					j = parseInt(j)+parseInt(this.indexes.get(new_x));
+					//if(j == NaN) {
+						//console.log("sjfgjshdjshs");
+					//	j = parseInt(this.indexes.get(new_x));
+					//}
+					//console.log("before j: "+j);
+					var xyz = this.storeOffsetMatch.get(x).get(this.storeContent.get(new_x));
+					//console.log("xyz: ",xyz);
+					if(!testMap.has(this.storeContent.get(new_x))) {
+						testMap.set(parseInt(xyz),this.storeContent.get(new_x));
+					}
+					if(minOff > xyz) {
+						minOff = xyz;
+						minLine = this.storeContent.get(new_x);
+					}
+				}
+				}
+			}
+			if(j !== NaN && j != 0) {
+				console.log(x," : ",j);
+				//console.log(testMap);
+				var tKey = Array.from(testMap.keys());
+				
+				tKey.sort(function(a, b){return a-b});
+				for (let z of tKey)
+					console.log (testMap.get(z));
+			}
+		}
+			
 	}
+
+
+
+
+
 	/**for(var i=0;i<terms.length;i++)
 	{	
 		console.log(this.indexes);
