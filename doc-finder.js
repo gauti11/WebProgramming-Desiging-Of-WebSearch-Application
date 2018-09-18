@@ -138,28 +138,6 @@ addContent(name, content) {
    */
   find(terms) {
     //@TODO
-	 //console.log(terms);
-	/**var termCount = terms.length;
-	//console.log(terms.length);
-	//var hello = this.storeContent;
-	//console.log(hello);
-	var storeContentKeys = this.storeContent.keys();
-	//console.log(storeContentKeys);
-	let count = 0;
-	for(let storeKey of storeContentKeys){
-		//console.log(storeKey);
-		let keyItem = ''+storeKey;
-		var x = keyItem.split(' ')[0];
-		var new_x = x+' '+terms[0];
-		//console.log("key_x: "+new_x);
-		if(keyItem === new_x) {
-			console.log(x+" : "+this.storeContent.get(keyItem));
-			console.log(x+" : "+this.indexes.get(keyItem));
-		}
-		//console.log("var x: ",x);
-		//if(count != termCount
-			
-	}*/
 
 	
 	var termCount = terms.length;
@@ -169,6 +147,7 @@ addContent(name, content) {
 	var storeContentKeys = this.fileIndexes.keys();
 	//console.log(storeContentKeys);
 	let count = 0;
+	let resultMap = new Map();
 	for(let storeKey of storeContentKeys){
 		//console.log(termCount);
 		let x = ''+storeKey;
@@ -177,8 +156,10 @@ addContent(name, content) {
 			var new_x = x+' '+terms[0];
 			//console.log("key_x: "+new_x);
 			if(this.storeContent.has(new_x)) {
-				console.log(x+" : "+this.storeContent.get(new_x));
-				console.log(this.indexes.get(new_x));
+				//console.log(x+" : "+this.storeContent.get(new_x));
+				//console.log(this.indexes.get(new_x));
+				let ans = x+" : "+this.indexes.get(new_x)+" : "+this.storeContent.get(new_x)+"\n";
+				resultMap.set(this.indexes.get(new_x), ans);
 			}
 		} else {
 			//console.log(this.storeOffsetMatch);
@@ -211,32 +192,32 @@ addContent(name, content) {
 				}
 			}
 			if(j !== NaN && j != 0) {
-				console.log(x," : ",j);
+				var ans = x+" : "+j +" : ";
+				//console.log(x," : ",j);
 				//console.log(testMap);
 				var tKey = Array.from(testMap.keys());
-				
 				tKey.sort(function(a, b){return a-b});
-				for (let z of tKey)
-					console.log (testMap.get(z));
+				for (let z of tKey) {
+					//console.log (testMap.get(z));
+					ans = ans+testMap.get(z)+"\n";
+				}
+				resultMap.set(j, ans);
 			}
 		}
 			
 	}
 
-
-
-
-
-	/**for(var i=0;i<terms.length;i++)
-	{	
-		console.log(this.indexes);
-		if(this.indexes.has(terms[i]))
-		{
-			console.log("in the file");
-			console.log(this.storeContent(name +" " +terms[i] , contentList[i]));
-			}
-		}*/
-    return [];
+	var resKeyArr = Array.from(resultMap.keys()).sort(function(a, b){return b-a});
+	var resArr = [];
+	for (let z of resKeyArr) {
+		//console.log (resultMap.get(z));
+		var res = resultMap.get(z).split(" : ");
+		//console.log(res);
+		let r = new Result(res[0], res[1], res[2]);
+		//resArr.push(resultMap.get(z));
+		resArr.push(r);
+	}
+    return resArr;
   }
 
 
@@ -246,8 +227,18 @@ addContent(name, content) {
    */
   complete(text) {
     //@TODO
-   	 console.log(text);	  
-	return [];
+   	//console.log(text);
+	var resultArr = [];
+	var map1 = new Map();
+	var textArr = Array.from(this.indexes.keys());
+	for(let i=0; i< textArr.length;i++){
+		let ans = textArr[i].split(" ")[1]+'';
+		if(ans.startsWith(text)) {
+			map1.set(ans,0);
+		}
+	}
+	resultArr = Array.from(map1.keys());
+	return resultArr;
   }  
 
 
