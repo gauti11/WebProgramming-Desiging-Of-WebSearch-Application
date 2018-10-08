@@ -171,7 +171,7 @@ _wordsLow(content){
     //TODO
 
 var fileContent  = this.dataSet.set(name, contentText);
-	await db.collection("DocInfo").update({_id: name},{_id: name, fileContent: contentText},{upsert:true});
+	await db.collection("DocInfo").updateMany({_id: name},{$set:{_id: name, fileContent: contentText}},{upsert:true});
 	//var editContent = this.words(content);
 	//console.log("Edit  " + editContent);
 	//var editContent = content.split(" ");
@@ -202,7 +202,7 @@ var fileContent  = this.dataSet.set(name, contentText);
 				count = this.indexes.get(name +" "+editContent[i]);
 				this.indexes.set(name + " " +editContent[i], count+1);
 				count++;
-				await db.collection("TableData").update({_id: {word: editContent[i],fileName: name}},{$set:{ count: count}},{upsert: true});			
+				await db.collection("TableData").updateMany({_id: {word: editContent[i],fileName: name}},{$set:{ count: count}},{upsert: true});			
 			}
 			else{
 				this.fileIndexes.set(name,name);
@@ -210,7 +210,7 @@ var fileContent  = this.dataSet.set(name, contentText);
 				doc_arr.push()
 				//this.db.collection("TableData").insertOne({fileName: name, word: editContent[i]})
 				//await db.collection("TableData").insertOne({_id: editContent[i],fileName: name,count: 0, line: contentList[j]});
-				await db.collection("TableData").update({_id: {word: editContent[i],fileName: name}},{$set:{ _id:{word: editContent[i],fileName: name},count: count, line: contentList[j], lineCounter:counter}},{upsert: true});
+				await db.collection("TableData").updateMany({_id: {word: editContent[i],fileName: name}},{$set:{ _id:{word: editContent[i],fileName: name},count: count, line: contentList[j], lineCounter:counter}},{upsert: true});
 				this.storeContent.set(name +" " +editContent[i] , contentList[j]);
 			}
 			//await db.collection("TableData").update({"_id.word": editContent[i],"_id.fileName": name},{$set:{ _id: editContent[i],count: count}},{upsert: true});
