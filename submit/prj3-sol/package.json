@@ -12,6 +12,6 @@
   "dependencies": {
     "cors": "^2.8.4",
     "doc-finder": "file:../../../git-repos/cs580w/lib/doc-finder",
-    "express": "^4.16.4"
+    "express": "^4.18.2"
   }
 }
